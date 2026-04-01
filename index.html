@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 추천기 (5게임)</title>
+    <style>
+        /* 전체 페이지 스타일 설정 */
+        body {
+            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* 5줄을 위해 최소 높이 적용 */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 550px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        /* 5게임 전체를 담는 영역 */
+        #games-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* 1게임(1줄) 영역 */
+        .game-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background-color: #fcfcfc;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+        
+        /* A, B, C, D, E 라벨 */
+        .game-label {
+            font-weight: bold;
+            color: #888;
+            font-size: 18px;
+            width: 25px;
+        }
+
+        /* 개별 로또 공 스타일 (5줄에 맞게 크기 축소) */
+        .ball {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2), 1px 1px 3px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 버튼 스타일 */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>행운의 로또 번호 추천기 🍀</h1>
+        <div id="games-container">
+            </div>
+        <button onclick="generateMultipleLottoNumbers()">5게임 연속 뽑기</button>
+    </div>
+
+    <script>
+        // 1게임(6개 번호)을 생성하는 함수
+        function generateSingleGame() {
+            const numbers = new Set();
+            while(numbers.size < 6) {
+                const randomNum = Math.floor(Math.random() * 45) + 1;
+                numbers.add(randomNum);
+            }
+            return Array.from(numbers).sort((a, b) => a - b);
+        }
+
+        // 번호에 따른 공 색상을 반환하는 함수
+        function getBallColor(num) {
+            if (num >= 1 && num <= 10) return '#fbc400'; // 노란색
+            if (num >= 11 && num <= 20) return '#69c8f2'; // 파란색
+            if (num >= 21 && num <= 30) return '#ff7272'; // 빨간색
+            if (num >= 31 && num <= 40) return '#aaaaaa'; // 회색
+            return '#b0d840'; // 녹색
+        }
+
+        // 5게임을 생성하고 화면에 그리는 함수
+        function generateMultipleLottoNumbers() {
+            const container = document.getElementById('games-container');
+            container.innerHTML = ''; // 기존 번호 초기화
+
+            const labels = ['A', 'B', 'C', 'D', 'E'];
+
+            // 5번 반복하여 5줄 생성
+            for (let i = 0; i < 5; i++) {
+                const gameNumbers = generateSingleGame();
+                
+                // 1줄을 감싸는 div 생성
+                const row = document.createElement('div');
+                row.classList.add('game-row');
+
+                // A, B, C, D, E 라벨 추가
+                const label = document.createElement('div');
+                label.classList.add('game-label');
+                label.textContent = labels[i];
+                row.appendChild(label);
+
+                // 6개의 공 생성 및 추가
+                gameNumbers.forEach(num => {
+                    const ball = document.createElement('div');
+                    ball.classList.add('ball');
+                    ball.textContent = num;
+                    ball.style.backgroundColor = getBallColor(num);
+                    row.appendChild(ball);
+                });
+
+                // 완성된 1줄을 전체 컨테이너에 추가
+                container.appendChild(row);
+            }
+        }
+
+        // 페이지가 처음 열렸을 때 5게임 바로 보여주기
+        window.onload = generateMultipleLottoNumbers;
+    </script>
+
+</body>
+</html>
