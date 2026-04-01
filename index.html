@@ -16,6 +16,7 @@
             --button-bg: #4CAF50;
             --button-hover: #45a049;
             --shadow: rgba(0,0,0,0.1);
+            --input-focus: #4CAF50;
         }
 
         /* 다크 모드 변수 */
@@ -29,6 +30,7 @@
             --button-bg: #388E3C;
             --button-hover: #2E7D32;
             --shadow: rgba(0,0,0,0.5);
+            --input-focus: #81C784;
         }
 
         /* 전체 페이지 스타일 설정 */
@@ -145,6 +147,7 @@
             transition: background-color 0.2s, transform 0.1s;
             width: 100%;
             box-sizing: border-box;
+            margin-bottom: 20px;
         }
 
         .generate-btn:hover {
@@ -153,6 +156,71 @@
 
         .generate-btn:active {
             transform: scale(0.97);
+        }
+
+        /* 제휴 문의 섹션 스타일 */
+        .contact-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--row-border);
+            text-align: left;
+        }
+
+        .contact-section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--row-border);
+            border-radius: 8px;
+            background-color: var(--row-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--input-focus);
+        }
+
+        .submit-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1976D2;
         }
     </style>
 </head>
@@ -165,6 +233,26 @@
         <h1>행운의 로또 번호 추천기 🍀</h1>
         <div id="games-container"></div>
         <button class="generate-btn" onclick="generateMultipleLottoNumbers()">5게임 연속 뽑기</button>
+
+        <!-- 제휴 문의 섹션 -->
+        <div class="contact-section">
+            <h2>제휴 문의 ✉️</h2>
+            <form action="https://formspree.io/f/mlgoljgy" method="POST">
+                <div class="form-group">
+                    <label for="name">성함 / 업체명</label>
+                    <input type="text" id="name" name="name" required placeholder="예: 홍길동">
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일 주소</label>
+                    <input type="email" id="email" name="_replyto" required placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="message">문의 내용</label>
+                    <textarea id="message" name="message" rows="4" required placeholder="문의하실 내용을 입력해주세요."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">문의하기</button>
+            </form>
+        </div>
     </div>
 
     <script>
