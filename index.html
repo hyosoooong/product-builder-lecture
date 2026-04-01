@@ -3,343 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로또 번호 추천기 (5게임)</title>
+    <meta name="description" content="확률 기반 로또 번호 추천 서비스. 전문적인 번호 추출 알고리즘과 통계 정보를 제공합니다. 행운의 숫자를 지금 바로 확인하세요.">
+    <meta name="keywords" content="로또번호추천, 로또, 행운의숫자, 로또당첨확률, 로또번호생성기">
+    <title>럭키로또(LuckyLotto) - 전문 로또 번호 추천 및 통계 서비스</title>
+    
     <!-- 구글 애드센스 자동 광고 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1236102923924627"
      crossorigin="anonymous"></script>
+
     <style>
         /* CSS 변수 설정 */
         :root {
-            --bg-color: #f4f7f6;
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --bg-color: #f8fafc;
             --container-bg: #ffffff;
-            --text-color: #333;
-            --sub-text-color: #888;
-            --row-bg: #fcfcfc;
-            --row-border: #eee;
-            --button-bg: #4CAF50;
-            --button-hover: #45a049;
-            --shadow: rgba(0,0,0,0.1);
-            --input-focus: #4CAF50;
+            --text-color: #1e293b;
+            --sub-text-color: #64748b;
+            --row-bg: #f1f5f9;
+            --row-border: #e2e8f0;
+            --nav-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
-        /* 다크 모드 변수 */
         .dark-mode {
-            --bg-color: #1a1a1a;
-            --container-bg: #2d2d2d;
-            --text-color: #e0e0e0;
-            --sub-text-color: #aaa;
-            --row-bg: #383838;
-            --row-border: #444;
-            --button-bg: #388E3C;
-            --button-hover: #2E7D32;
-            --shadow: rgba(0,0,0,0.5);
-            --input-focus: #81C784;
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --sub-text-color: #94a3b8;
+            --row-bg: #334155;
+            --row-border: #475569;
+            --nav-bg: #1e293b;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5);
         }
 
-        /* 전체 페이지 스타일 설정 */
         body {
-            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+            font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+            line-height: 1.6;
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 메인 컨테이너 */
+        /* 네비게이션 */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* 메인 레이아웃 */
+        .wrapper {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
         .container {
             background-color: var(--container-bg);
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px var(--shadow);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
             text-align: center;
-            max-width: 550px;
-            width: 100%;
-            position: relative;
-            transition: background-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 2rem;
         }
 
-        h1 {
-            color: var(--text-color);
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
-
-        /* 모드 전환 버튼 스타일 */
-        .mode-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: 1px solid var(--row-border);
-            color: var(--text-color);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            width: 40px;
-            height: 40px;
-        }
-
-        .mode-toggle:hover {
-            background-color: var(--row-bg);
-        }
-
-        /* 5게임 전체를 담는 영역 */
+        /* 로또 섹션 스타일 */
+        h1 { font-size: 2rem; margin-bottom: 1.5rem; }
+        
         #games-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        /* 1게임(1줄) 영역 */
         .game-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
+            gap: 0.8rem;
+            padding: 1rem;
             background-color: var(--row-bg);
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid var(--row-border);
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        
-        /* A, B, C, D, E 라벨 */
-        .game-label {
-            font-weight: bold;
-            color: var(--sub-text-color);
-            font-size: 18px;
-            width: 25px;
         }
 
-        /* 개별 로또 공 스타일 */
         .ball {
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
             font-weight: bold;
-            color: #fff;
-            box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2), 1px 1px 3px rgba(0,0,0,0.1);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* 버튼 스타일 */
         .generate-btn {
-            background-color: var(--button-bg);
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
             width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 20px;
+            transition: transform 0.1s, opacity 0.2s;
         }
 
-        .generate-btn:hover {
-            background-color: var(--button-hover);
-        }
-
-        .generate-btn:active {
-            transform: scale(0.97);
-        }
-
-        /* 제휴 문의 섹션 스타일 */
-        .contact-section {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--row-border);
+        /* 정보성 콘텐츠 섹션 */
+        .info-section {
+            background-color: var(--container-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
             text-align: left;
         }
 
-        .contact-section h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
+        .info-section h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+
+        /* 폼 & 댓글 */
+        .contact-section { margin-top: 2rem; border-top: 1px solid var(--row-border); padding-top: 2rem; }
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px; border: 1px solid var(--row-border);
+            border-radius: 8px; background: var(--row-bg); color: var(--text-color);
+        }
+
+        /* 푸터 및 법적 고지 */
+        footer {
             text-align: center;
-            color: var(--text-color);
+            padding: 3rem 0;
+            color: var(--sub-text-color);
+            font-size: 0.85rem;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .footer-links { margin-bottom: 1rem; }
+        .footer-links a { color: var(--sub-text-color); margin: 0 10px; text-decoration: none; }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-
-        .form-group input, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--row-border);
-            border-radius: 8px;
-            background-color: var(--row-bg);
-            color: var(--text-color);
-            box-sizing: border-box;
-            font-family: inherit;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus, 
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--input-focus);
-        }
-
-        .submit-btn {
-            background-color: #2196F3;
-            color: white;
+        /* 모드 전환 */
+        .mode-toggle {
+            background: var(--row-bg);
             border: none;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
             cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            background-color: #1976D2;
-        }
-
-        /* 댓글 섹션 스타일 */
-        #disqus_thread {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--row-border);
+            color: var(--text-color);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <button class="mode-toggle" onclick="toggleDarkMode()" title="모드 전환">
-            <span id="mode-icon">🌙</span>
-        </button>
-        <h1>행운의 로또 번호 추천기 🍀</h1>
-        <div id="games-container"></div>
-        <button class="generate-btn" onclick="generateMultipleLottoNumbers()">5게임 연속 뽑기</button>
-
-        <!-- 제휴 문의 섹션 -->
-        <div class="contact-section">
-            <h2>제휴 문의 ✉️</h2>
-            <form action="https://formspree.io/f/mlgoljgy" method="POST">
-                <div class="form-group">
-                    <label for="name">성함 / 업체명</label>
-                    <input type="text" id="name" name="name" required placeholder="예: 홍길동">
-                </div>
-                <div class="form-group">
-                    <label for="email">이메일 주소</label>
-                    <input type="email" id="email" name="_replyto" required placeholder="example@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="message">문의 내용</label>
-                    <textarea id="message" name="message" rows="4" required placeholder="문의하실 내용을 입력해주세요."></textarea>
-                </div>
-                <button type="submit" class="submit-btn">문의하기</button>
-            </form>
+    <nav>
+        <a href="#" class="nav-logo">🍀 LuckyLotto</a>
+        <div class="nav-links">
+            <a href="#tool">번호추천</a>
+            <a href="#info">당첨정보</a>
+            <a href="#faq">자주묻는질문</a>
+            <a href="#contact">제휴문의</a>
         </div>
+        <button class="mode-toggle" onclick="toggleDarkMode()" id="mode-btn">🌙 다크모드</button>
+    </nav>
+
+    <div class="wrapper">
+        <!-- 툴 섹션 -->
+        <section id="tool" class="container">
+            <h1>행운의 로또 번호 추천기</h1>
+            <p style="color: var(--sub-text-color); margin-bottom: 2rem;">매주 업데이트되는 알고리즘으로 추출한 행운의 숫자를 확인하세요.</p>
+            <div id="games-container"></div>
+            <button class="generate-btn" onclick="generateMultipleLottoNumbers()">지금 번호 추출하기</button>
+        </section>
+
+        <!-- 정보성 콘텐츠 섹션 1 -->
+        <section id="info" class="info-section">
+            <h2>로또 당첨 확률 및 통계 정보</h2>
+            <div class="info-grid">
+                <div>
+                    <h3 style="font-size: 1.1rem;">📊 당첨 확률 안내</h3>
+                    <p style="font-size: 0.9rem; color: var(--sub-text-color);">
+                        1등 당첨 확률은 1/8,145,060입니다. 단순한 운을 넘어, 최근 많이 등장한 번호와 균형 잡힌 홀짝 비율을 고려하는 것이 즐거운 분석의 시작입니다.
+                    </p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.1rem;">💡 번호 선택 팁</h3>
+                    <p style="font-size: 0.9rem; color: var(--sub-text-color);">
+                        과거 데이터에 따르면 번호의 총합이 100~170 사이에 위치할 확률이 높습니다. 본 추천기는 이러한 기본적인 통계 균형을 고려하여 추출됩니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 정보성 콘텐츠 섹션 2 (FAQ) -->
+        <section id="faq" class="info-section">
+            <h2>자주 묻는 질문 (FAQ)</h2>
+            <div style="margin-bottom: 1rem;">
+                <strong style="display: block; margin-bottom: 0.5rem;">Q. 번호 추출 알고리즘은 어떻게 작동하나요?</strong>
+                <p style="font-size: 0.9rem; color: var(--sub-text-color);">본 서비스는 JavaScript의 고도로 난수화된 알고리즘을 사용하여 1부터 45까지의 숫자 중 중복 없이 6개를 무작위로 추출합니다.</p>
+            </div>
+            <div>
+                <strong style="display: block; margin-bottom: 0.5rem;">Q. 추천받은 번호로 꼭 구매해야 하나요?</strong>
+                <p style="font-size: 0.9rem; color: var(--sub-text-color);">추천 번호는 재미와 참고용입니다. 복권 구매는 본인의 판단하에 소액으로 건전하게 즐기시길 권장합니다.</p>
+            </div>
+        </section>
+
+        <!-- 문의 섹션 -->
+        <section id="contact" class="container">
+            <div class="contact-section">
+                <h2>제휴 및 서비스 문의</h2>
+                <form action="https://formspree.io/f/mlgoljgy" method="POST">
+                    <div class="form-group">
+                        <label>성함 / 업체명</label>
+                        <input type="text" name="name" required placeholder="문의자 성함을 입력하세요.">
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" name="_replyto" required placeholder="답변받을 이메일을 입력하세요.">
+                    </div>
+                    <div class="form-group">
+                        <label>내용</label>
+                        <textarea name="message" rows="4" required placeholder="문의하실 상세 내용을 작성해주세요."></textarea>
+                    </div>
+                    <button type="submit" class="generate-btn" style="background-color: var(--secondary-color);">문의 메시지 보내기</button>
+                </form>
+            </div>
+        </section>
 
         <!-- 댓글 섹션 -->
-        <div id="disqus_thread"></div>
+        <section class="info-section">
+            <h2>사용자 소통 공간</h2>
+            <div id="disqus_thread"></div>
+        </section>
     </div>
 
+    <footer>
+        <div class="footer-links">
+            <a href="#">홈</a> | 
+            <a href="#" onclick="alert('본 서비스는 어떠한 당첨도 보장하지 않으며, 결과에 대한 책임은 사용자에게 있습니다.')">면책조항</a> | 
+            <a href="#" onclick="alert('사용자의 입력 정보는 Formspree를 통한 문의 접수 이외의 용도로 사용되지 않습니다.')">개인정보처리방침</a>
+        </div>
+        <p>&copy; 2026 LuckyLotto. All rights reserved.</p>
+        <p style="font-size: 0.75rem; margin-top: 10px;">본 사이트는 구글 애드센스 정책을 준수하며 고품질의 정보를 제공하기 위해 노력합니다.</p>
+    </footer>
+
     <script>
-        // 다크 모드 토글 함수
+        // 테마 관리
         function toggleDarkMode() {
             const body = document.body;
-            const icon = document.getElementById('mode-icon');
-            
+            const btn = document.getElementById('mode-btn');
             body.classList.toggle('dark-mode');
-            
-            const isDarkMode = body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            icon.textContent = isDarkMode ? '☀️' : '🌙';
-
-            // Disqus 다크모드 리로드 (필요 시)
-            if (typeof DISQUS !== 'undefined') {
-                DISQUS.reset({ reload: true });
-            }
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            btn.textContent = isDark ? '☀️ 라이트모드' : '🌙 다크모드';
+            if (typeof DISQUS !== 'undefined') DISQUS.reset({ reload: true });
         }
 
-        // 초기 테마 설정 확인
         function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const icon = document.getElementById('mode-icon');
-            if (savedTheme === 'dark') {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
                 document.body.classList.add('dark-mode');
-                icon.textContent = '☀️';
+                document.getElementById('mode-btn').textContent = '☀️ 라이트모드';
             }
         }
 
-        // 1게임(6개 번호)을 생성하는 함수
-        function generateSingleGame() {
-            const numbers = new Set();
-            while(numbers.size < 6) {
-                const randomNum = Math.floor(Math.random() * 45) + 1;
-                numbers.add(randomNum);
-            }
-            return Array.from(numbers).sort((a, b) => a - b);
-        }
-
-        // 번호에 따른 공 색상을 반환하는 함수
+        // 로또 로직
         function getBallColor(num) {
-            if (num >= 1 && num <= 10) return '#fbc400'; // 노란색
-            if (num >= 11 && num <= 20) return '#69c8f2'; // 파란색
-            if (num >= 21 && num <= 30) return '#ff7272'; // 빨간색
-            if (num >= 31 && num <= 40) return '#aaaaaa'; // 회색
-            return '#b0d840'; // 녹색
+            if (num <= 10) return '#fbc400';
+            if (num <= 20) return '#69c8f2';
+            if (num <= 30) return '#ff7272';
+            if (num <= 40) return '#aaaaaa';
+            return '#b0d840';
         }
 
-        // 5게임을 생성하고 화면에 그리는 함수
         function generateMultipleLottoNumbers() {
             const container = document.getElementById('games-container');
-            container.innerHTML = ''; // 기존 번호 초기화
-
+            container.innerHTML = '';
             const labels = ['A', 'B', 'C', 'D', 'E'];
-
             for (let i = 0; i < 5; i++) {
-                const gameNumbers = generateSingleGame();
+                const nums = new Set();
+                while(nums.size < 6) nums.add(Math.floor(Math.random() * 45) + 1);
+                const sortedNums = Array.from(nums).sort((a, b) => a - b);
+                
                 const row = document.createElement('div');
-                row.classList.add('game-row');
-
-                const label = document.createElement('div');
-                label.classList.add('game-label');
-                label.textContent = labels[i];
-                row.appendChild(label);
-
-                gameNumbers.forEach(num => {
+                row.className = 'game-row';
+                row.innerHTML = `<span style="font-weight:bold; color:var(--sub-text-color); width:20px;">${labels[i]}</span>`;
+                sortedNums.forEach(n => {
                     const ball = document.createElement('div');
-                    ball.classList.add('ball');
-                    ball.textContent = num;
-                    ball.style.backgroundColor = getBallColor(num);
+                    ball.className = 'ball';
+                    ball.textContent = n;
+                    ball.style.backgroundColor = getBallColor(n);
                     row.appendChild(ball);
                 });
-
                 container.appendChild(row);
             }
         }
@@ -349,17 +348,13 @@
             generateMultipleLottoNumbers();
         };
 
-        /**
-        *  Disqus 설정
-        */
-        (function() { // DON'T EDIT BELOW THIS LINE
+        // Disqus
+        (function() {
             var d = document, s = d.createElement('script');
             s.src = 'https://productbuilder-hqeoqdnpmu.disqus.com/embed.js';
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
     </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
 </body>
 </html>
